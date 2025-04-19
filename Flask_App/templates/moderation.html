@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Content Moderation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        /* Header Styles */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Centers the h2 */
+            position: relative; /* Allows absolute positioning of the back button */
+            padding: 20px;
+            background-color: #3315c9;
+            color: white;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .form-group {
+            width: 60%;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            resize: vertical;
+        }
+        .result-area {
+            width: 60%;
+            padding: 15px;
+            background-color: #e9ecef;
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            min-height: 100px;
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .form-group, .result-area {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="window.location.href='/'">Back</button>
+        <h2>Content Moderation</h2>
+    </div>
+    <div class="container">
+        <div class="form-group">
+            <label for="input-text"><strong>Enter Text to Moderate:</strong></label>
+            <textarea id="input-text" placeholder="Type or paste text here..."></textarea>
+        </div>
+        <div class="buttons">
+            <button id="moderate-button">Moderate</button>
+        </div>
+        <div class="form-group">
+            <label for="moderated-text"><strong>Moderated Text:</strong></label>
+            <textarea id="moderated-text" placeholder="Your moderated text will appear here..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('moderate-button').addEventListener('click', function() {
+            const inputText = document.getElementById('input-text').value.trim();
+            const moderatedTextDiv = document.getElementById('moderated-text');
+
+            if (!inputText) {
+                moderatedTextDiv.style.color = 'red';
+                moderatedTextDiv.textContent = 'Please enter some text for moderation.';
+                return;
+            }
+
+            console.log("From DOM"+inputText)
+
+            const formData = new URLSearchParams();
+            formData.append('text', inputText);
+
+            fetch('/rewrite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    moderatedTextDiv.style.color = 'red';
+                    moderatedTextDiv.textContent = `Error: ${data.error}`;
+                } else {
+                    moderatedTextDiv.textContent = data.value;
+                }
+            })
+            .catch((error) => {
+                moderatedTextDiv.style.color = 'red';
+                moderatedTextDiv.textContent = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>
