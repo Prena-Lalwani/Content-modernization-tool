@@ -14,10 +14,11 @@ import re
 app = Flask(__name__)
 
 # Replace with your Ngrok URL
-NGROK_URL = "https://9f78-34-126-86-58.ngrok-free.app/generate"
+NGROK_URL = "https://3feb-34-19-121-233.ngrok-free.app///generate"
 
 # Load your fine-tuned BERT model and tokenizer
-model = BertForSequenceClassification.from_pretrained('./bert_model/')
+# model = BertForSequenceClassification.from_pretrained('./bert_model/')
+model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 stop_words = set(stopwords.words('english'))

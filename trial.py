@@ -1,7 +1,7 @@
 import requests
 
 # Replace with your Ngrok URL
-NGROK_URL = "https://5283-34-169-23-150.ngrok-free.app/generate"
+NGROK_URL = "https://3feb-34-19-121-233.ngrok-free.app///generate"
 
 # Function to send data to the API
 def send_data(input_text):
